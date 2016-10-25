@@ -29,7 +29,7 @@ public abstract class User extends UnDeletedEntity {
 	 *
 	 * @return
 	 */
-	public abstract String getUsername();
+	public abstract String getUserName();
 
 	public String getPwd() {
 		return pwd;

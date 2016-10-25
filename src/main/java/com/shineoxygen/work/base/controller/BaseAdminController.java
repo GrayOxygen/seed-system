@@ -1,13 +1,32 @@
 package com.shineoxygen.work.base.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
 
 import com.shineoxygen.work.admin.model.AdminUser;
 import com.shineoxygen.work.admin.service.AdminUserService;
+import com.shineoxygen.work.base.model.bootstraptable.Column;
+import com.shineoxygen.work.base.model.bootstraptable.SentParameters;
+import com.shineoxygen.work.base.utils.ReflectionUtils;
+import com.shineoxygen.work.base.utils.RegexUtil;
 
 public class BaseAdminController extends BaseController {
 
@@ -34,7 +53,8 @@ public class BaseAdminController extends BaseController {
 	protected <T> void pageModel(Page<T> page, Model model) {
 		// 准备参数
 		model.addAttribute("page", page);
-//		model.addAttribute("pageInfo", PageInfo.getAdminPagingNavigation(page));
+		// model.addAttribute("pageInfo",
+		// PageInfo.getAdminPagingNavigation(page));
 	}
 
 	/**
@@ -65,8 +85,102 @@ public class BaseAdminController extends BaseController {
 	 * @param adminUser
 	 */
 	public static void setAdminUserSession(HttpServletRequest req, AdminUser adminUser) {
-		req.getSession().setAttribute(BaseAdminController.ADMINUSER_NAME, adminUser.getUsername());
+		req.getSession().setAttribute(BaseAdminController.ADMINUSER_NAME, adminUser.getUserName());
 		req.getSession().setAttribute(BaseAdminController.ADMINUSER, adminUser);
+	}
+
+	/**
+	 * 
+	 * @param sourceStr
+	 *            如columns[0][searchable]=true columns[3][search][value]
+	 * @param regexStr
+	 * @param map
+	 * @return
+	 */
+	protected static void wrapToMap(String sourceStr, Map<String, List<String>> map) {
+		List<String> indexAndPropName = RegexUtil.getStrings(sourceStr.split("=")[0], "\\[(.*?)\\]");
+		String[] sourceArray = sourceStr.split("=");
+		// 属性值
+		String value = sourceArray.length > 1 ? sourceArray[1] : "";
+		if (map.containsKey(indexAndPropName.get(0))) {
+			List<String> tempList = new ArrayList<>();
+			tempList.addAll(map.get(indexAndPropName.get(0)));
+
+			if (indexAndPropName.size() == 2) {
+				tempList.add(indexAndPropName.get(1) + "=" + value);
+			}
+			if (indexAndPropName.size() == 3) {
+				tempList.add(indexAndPropName.get(1) + "." + indexAndPropName.get(2) + "=" + value);
+			}
+			map.put(indexAndPropName.get(0), tempList);
+		} else {
+			map.put(indexAndPropName.get(0), Arrays.asList(indexAndPropName.get(1) + "=" + value));
+		}
+	}
+
+	/**
+	 * 包装bootstrap datatable传到后台的参数
+	 * 
+	 * @param bytes
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	public static SentParameters wrapSentParameters(byte[] bytes) throws UnsupportedEncodingException, IllegalAccessException, InvocationTargetException {
+		String url = URLDecoder.decode(new String(bytes, "UTF-8"));
+		List<String> properties = new ArrayList<>();
+		SentParameters sentParameters = new SentParameters();
+		CollectionUtils.addAll(properties, StringUtils.split(url, "&"));
+		// columns[0][searchable]=true变成key:0 value:searchable=true...
+		Map<String, List<String>> columnMap = new HashMap<>();
+		Map<String, List<String>> orderMap = new HashMap<>();
+		Map<String, List<String>> searchMap = new HashMap<>();
+		// search[value]:search[regex]:false
+		for (String str : properties) {
+			String[] array = str.split("=");
+			// 找到columns
+			if (RegexUtil.isMatch(str, "columns\\[\\d+\\]\\[\\w+\\]")) {
+				wrapToMap(str, columnMap);
+			}
+			// 找到order
+			if (RegexUtil.isMatch(str, "order\\[\\d+\\]\\[\\w+\\]")) {
+				wrapToMap(str, orderMap);
+			}
+			// 找到search
+			if (RegexUtil.isMatch(str, "search\\[\\w+\\]")) {
+				String temp = StringUtils.replace(str, "[", ".");
+				if (array.length > 1) {// 确保有值
+					BeanUtils.setProperty(sentParameters, temp.substring(0, temp.indexOf("]")), array[1]);
+				}
+			}
+			// 设置datatable列与POJO属性名称的关系
+			if (RegexUtil.isMatch(str, "\\d+=\\w+")) {
+				if (array.length > 1) {
+					sentParameters.getColumnProperty().addRelation(Integer.parseInt(array[0]), array[1]);
+				}
+			}
+			// 自定义的查询条件
+			if (StringUtils.isNoneBlank(array[0]) && RegexUtil.isMatch(str, "filters\\[.+\\]")) {
+				String temp = StringUtils.replace(str, "[", ".");
+				if (array.length > 1) {// 确保有值
+					BeanUtils.setProperty(sentParameters, temp.substring(0, temp.indexOf("]")), array[1]);
+				}
+			}
+
+			// 普通属性，直接加入:draw start length
+			if (StringUtils.containsAny(array[0], "draw", "start", "length")) {
+				BeanUtils.setProperty(sentParameters, RegexUtil.getStrings(str, "(.*?)=").get(0), (array.length > 1 ? array[1] : ""));
+			}
+		}
+		// 列信息
+		sentParameters.wrapColumns(columnMap);
+		// 排序信息
+		sentParameters.wrapOrder(orderMap);
+		// 列下标与POJO的属性名称关系
+		sentParameters.getColumnProperty().wireRelation();
+
+		return sentParameters;
 	}
 
 }

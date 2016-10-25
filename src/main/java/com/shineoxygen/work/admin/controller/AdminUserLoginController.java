@@ -1,17 +1,24 @@
 package com.shineoxygen.work.admin.controller;
 
+import java.util.List;
+
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.shineoxygen.work.admin.model.AdminUser;
 import com.shineoxygen.work.admin.service.AdminUserService;
 import com.shineoxygen.work.base.controller.BaseAdminController;
+import com.shineoxygen.work.base.controller.BaseController;
+import com.shineoxygen.work.temp.HomeController;
 
 /**
  * 后台用户登录
@@ -21,7 +28,7 @@ import com.shineoxygen.work.base.controller.BaseAdminController;
 @Controller
 public class AdminUserLoginController extends BaseAdminController {
 
-	private final static Logger log = LoggerFactory.getLogger(AdminUserLoginController.class);
+	private static final Logger logger = LogManager.getLogger(AdminUserLoginController.class);
 
 	@Autowired
 	private AdminUserService adminUserSrv;
@@ -37,8 +44,44 @@ public class AdminUserLoginController extends BaseAdminController {
 	 * @return
 	 */
 	@RequestMapping("/admin/login")
-	public String login(String username, String pwd, String captcha, String autoLoginFlag, HttpServletRequest req, HttpServletResponse res) throws Exception {
-		return "";
+	public String login(String userName, String pwd, String captcha, String autoLoginFlag, HttpServletRequest req, HttpServletResponse res) throws Exception {
+		boolean result = true;
+		Cookie[] cookies = req.getCookies();
+		Cookie destCookie = null;
+
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if ("autoLoginSession".equals(cookie.getName())) {
+					destCookie = cookie;
+					break;
+				}
+			}
+		}
+		if (destCookie != null) {// 存在cookie，自动登录
+			// List<AdminUser> list =
+			// adminUserSrv.findByProperty("autoLoginSession",
+			// destCookie.getValue());
+			// if (list.size() > 0) {
+			// AdminUser user = list.get(0);
+			// BaseAdminController.setAdminUserSession(req, user);
+			// } else {
+			// return "admin/login";
+			// }
+		} else {
+
+			if (StringUtils.isAnyBlank(userName, pwd ) ) {
+				return "admin/login";
+			}
+
+			AdminUser user = adminUserSrv.findByUserNameAndPwd(userName, pwd);
+			if (null == user) {
+				logger.warn("登陆失败，" + userName + " 用户不存在，ip：" + BaseController.getReqIp(req));
+			}
+
+			BaseAdminController.setAdminUserSession(req, user);
+			return "redirect:/admin/index.do";
+		}
+		return "admin/login";
 	}
 
 	/**
@@ -49,7 +92,7 @@ public class AdminUserLoginController extends BaseAdminController {
 	 */
 	@RequestMapping("/admin/getPwdPage")
 	public String getPwdPage(Model model) {
-		return "/admin/getPwd";
+		return "admin/getPwd";
 	}
 
 	@RequestMapping("/admin/resetPwd")
@@ -67,7 +110,7 @@ public class AdminUserLoginController extends BaseAdminController {
 	 */
 	@RequestMapping("/admin/logout")
 	public String logout(HttpServletRequest req, HttpServletResponse res) {
-		return "";
+		return "admin/login";
 	}
 
 	/**

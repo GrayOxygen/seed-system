@@ -1,5 +1,7 @@
 package com.shineoxygen.work.base.model;
 
+import com.alibaba.fastjson.JSON;
+
 /**
  * 
  * @author 王辉阳
@@ -17,13 +19,25 @@ public class ResultObject {
 	public ResultObject() {
 	}
 
-	public ResultObject(boolean success) {
+	private ResultObject(boolean success) {
 		this.success = success;
 	}
 
-	public ResultObject(boolean success, String message) {
+	private ResultObject(boolean success, String message) {
 		this.success = success;
 		this.message = message;
+	}
+
+	public static String sucResultJSON(String msg) {
+		return JSON.toJSONString(new ResultObject(true, msg), true);
+	}
+
+	public static String errResultJSON(String msg) {
+		return JSON.toJSONString(new ResultObject(true, msg), true);
+	}
+
+	public String toJson() {
+		return JSON.toJSONString(this, true);
 	}
 
 	/**

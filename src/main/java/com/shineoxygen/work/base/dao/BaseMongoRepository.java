@@ -2,8 +2,12 @@ package com.shineoxygen.work.base.dao;
 
 import java.io.Serializable;
 
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.NoRepositoryBean;
+
+import com.shineoxygen.work.base.model.bootstraptable.SentParameters;
+import com.shineoxygen.work.base.model.bootstraptable.TablePage;
 
 /**
  * 所有dao实现该接口代替spring data提供的Repository等接口
@@ -20,4 +24,6 @@ import org.springframework.data.repository.NoRepositoryBean;
 @NoRepositoryBean
 public interface BaseMongoRepository<T, ID extends Serializable> extends MongoRepository<T, ID> {
 	void del(String id, Class clazz);
+
+	TablePage<T> tablePage(Query query, SentParameters sentParameters, Class<T> clazz);
 }

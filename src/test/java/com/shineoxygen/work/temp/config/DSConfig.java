@@ -1,4 +1,4 @@
-package com.shineoxygen.work.config.db;
+package com.shineoxygen.work.temp.config;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -13,15 +13,14 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-import org.springframework.data.web.config.EnableSpringDataWebSupport;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
-import com.shineoxygen.work.base.dao.impl.BaseMongoRepositoryImpl;
+import com.shineoxygen.work.temp.dao.impl.MyRepositoryImpl;
 
 /**
- * mongodb数据库配置
+ * 数据库配置
  * 
  * @author 王辉阳
  * @date 2016年10月21日 下午4:55:58
@@ -29,10 +28,9 @@ import com.shineoxygen.work.base.dao.impl.BaseMongoRepositoryImpl;
 @Configuration
 @PropertySources(value = { @PropertySource(value = "classpath:mongodb.properties") })
 // 开启Mongo Repository自定义功能，才能给repository或自己的dao自定义方法
-@EnableMongoRepositories(basePackages = { "com.shineoxygen.work.temp", "com.shineoxygen.work.**.dao" }, repositoryBaseClass = BaseMongoRepositoryImpl.class)
-// 增加spring data对web的特性支持
-@EnableSpringDataWebSupport
-public class MongodbConfig {
+// repositoryImplementationPostfix默认为Impl，表示提供自定义方法的repository实现的名字后缀，spring由此找到接口与实现对应关系
+@EnableMongoRepositories(basePackages = "com.shineoxygen.work.temp.dao", repositoryImplementationPostfix = "Impl", repositoryBaseClass = MyRepositoryImpl.class)
+public class DSConfig {
 	@Autowired
 	private Environment env;
 

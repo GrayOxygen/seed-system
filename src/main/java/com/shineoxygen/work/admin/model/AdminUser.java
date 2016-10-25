@@ -1,17 +1,18 @@
 package com.shineoxygen.work.admin.model;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import com.shineoxygen.work.base.model.User;
-
+@Document(collection="AdminUser")
 public class AdminUser extends User {
-	private String username;
+	private String userName;
 
-	@Override
-	public String getUsername() {
-		return null;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 }

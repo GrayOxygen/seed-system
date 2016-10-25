@@ -1,8 +1,7 @@
-package com.shineoxygen.work.config.db;
+package com.shineoxygen.work.fastdev.config;
 
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +12,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-import org.springframework.data.web.config.EnableSpringDataWebSupport;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
@@ -21,7 +19,7 @@ import com.mongodb.ServerAddress;
 import com.shineoxygen.work.base.dao.impl.BaseMongoRepositoryImpl;
 
 /**
- * mongodb数据库配置
+ * 数据库配置
  * 
  * @author 王辉阳
  * @date 2016年10月21日 下午4:55:58
@@ -29,9 +27,8 @@ import com.shineoxygen.work.base.dao.impl.BaseMongoRepositoryImpl;
 @Configuration
 @PropertySources(value = { @PropertySource(value = "classpath:mongodb.properties") })
 // 开启Mongo Repository自定义功能，才能给repository或自己的dao自定义方法
-@EnableMongoRepositories(basePackages = { "com.shineoxygen.work.temp", "com.shineoxygen.work.**.dao" }, repositoryBaseClass = BaseMongoRepositoryImpl.class)
-// 增加spring data对web的特性支持
-@EnableSpringDataWebSupport
+// repositoryImplementationPostfix默认为Impl，表示提供自定义方法的repository实现的名字后缀，spring由此找到接口与实现对应关系
+@EnableMongoRepositories(basePackages = { "com.shineoxygen.work.base.dao","com.shineoxygen.work.admin.dao" }, repositoryImplementationPostfix = "Impl", repositoryBaseClass = BaseMongoRepositoryImpl.class)
 public class MongodbConfig {
 	@Autowired
 	private Environment env;
@@ -48,9 +45,7 @@ public class MongodbConfig {
 		ServerAddress addr = new ServerAddress(env.getProperty("mongodb.host"), Integer.parseInt(env.getProperty("mongodb.port")));
 		MongoCredential credential = MongoCredential.createScramSha1Credential(env.getProperty("mongodb.username"), env.getProperty("mongodb.databasename"),
 				env.getProperty("mongodb.password").toCharArray());
-		List<MongoCredential> list = new ArrayList<>();
-		list.add(credential);
-		MongoClient mongo = new MongoClient(addr, list);
+		MongoClient mongo = new MongoClient(addr, Arrays.asList(credential));
 		return new MongoTemplate(mongo, env.getProperty("mongodb.databasename"));
 	}
 
