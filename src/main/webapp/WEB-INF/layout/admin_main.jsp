@@ -6,14 +6,20 @@ This is a starter template page. Use this page to start your new project from
 scratch. This page gets rid of all links and provides the needed markup only.
 -->
         <html>
-
         <head>
             <!-- Bootstrap 3.3.6 -->
             <link rel="stylesheet" href="${static}/bootstrap-3.3.6/css/bootstrap.min.css">
             <!-- Font Awesome -->
+            <!-- 
+            <link href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+             -->
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
             <!-- Ionicons -->
+<!-- 
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+ --> 
+            <link href="//cdn.bootcss.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
+            
             <!-- Theme style -->
             <link rel="stylesheet" href="${static}/AdminLTE-2.3.7/dist/css/AdminLTE.min.css">
             <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
@@ -21,33 +27,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
         apply the skin class to the body tag so the changes take effect.
   -->
             <link rel="stylesheet" href="${static}/AdminLTE-2.3.7/dist/css/skins/skin-blue.min.css">
-            <!-- DataTables -->
-            <link rel="stylesheet" href="${static}/plugins/datatables/dataTables.bootstrap.css">
             <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
             <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
             <!--[if lt IE 9]>
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
-            <!-- REQUIRED JS SCRIPTS -->
-            <!-- jQuery 2.2.3 -->
-            <script src="${static}/plugins/jQuery/jquery-2.2.3.min.js"></script>
-            <!-- Bootstrap 3.3.6 -->
-            <script src="${static}/bootstrap-3.3.6/js/bootstrap.min.js"></script>
-            <!-- AdminLTE App -->
-            <script src="${static}/AdminLTE-2.3.7/dist/js/app.min.js"></script>
-            <!-- DataTables -->
-            <script src="${static}/plugins/datatables/jquery.dataTables.min.js"></script>
-            <script src="${static}/plugins/datatables/dataTables.bootstrap.min.js"></script>
-            <!-- SlimScroll -->
-            <script src="${static}/plugins/slimScroll/jquery.slimscroll.min.js"></script>
-            <!-- FastClick -->
-            <script src="${static}/plugins/fastclick/fastclick.js"></script>
-            <!-- Optionally, you can add Slimscroll and FastClick plugins.
-         Both of these plugins are recommended to enhance the
-         user experience. Slimscroll is required when using the
-         fixed layout. -->
-            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+           
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8"  />
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <title>
                 <sitemesh:write property='title' />
@@ -256,9 +243,11 @@ desired effect
                                 <img src="${static}/AdminLTE-2.3.7/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                             </div>
                             <div class="pull-left info">
-                                <p>Alexander Pierce</p>
+                                <p>${ADMINUSER_NAME}</p>
                                 <!-- Status -->
+                                <!-- 
                                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                                 -->
                             </div>
                         </div>
                         <!-- search form (Optional) -->
@@ -274,21 +263,24 @@ desired effect
                         <!-- /.search form -->
                         <!-- Sidebar Menu -->
                         <ul class="sidebar-menu">
-                            <li class="header">HEADER</li>
+                            <li class="header">菜单</li>
                             <!-- Optionally, you can add icons to the links -->
-                            <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
-                            <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-                            <li class="treeview">
-                                <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-                                <ul class="treeview-menu">
-                                    <li><a href="#">Link in level 2</a></li>
-                                    <li><a href="#">Link in level 2</a></li>
-                                </ul>
-                            </li>
+                            <li role="index"  class="active"><a href="${ctx }/admin/index"><i class="fa fa-link"></i> <span>主页</span></a></li>
+                            <li  role="test"><a href="${ctx }/admin/index"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+                            <li class="treeview"   >
+						           <a href="#">
+						            <i class="fa fa-wrench"></i>
+						            <span>系统管理</span>
+						            <span class="pull-right-container">
+						              <i class="fa fa-angle-left pull-right"></i>
+						            </span>
+						          </a>
+						          <ul class="treeview-menu">
+                                    <li role="adminUsers"><a href="${ctx}/adminUsers/listPage"><i class="fa fa-circle-o"> </i> <span>用户管理</span></a></li>
+                                    <li role="roles"><a href="${ctx}/roles/listPage"><i class="fa fa-circle-o"> </i>角色管理</a></li>
+                                    <li role="permissions"><a href="${ctx}/permissions/listPage"><i class="fa fa-circle-o"> </i>权限管理</a></li>
+						          </ul>
+						        </li>
                         </ul>
                         <!-- /.sidebar-menu -->
                     </section>
@@ -319,10 +311,12 @@ desired effect
                 <footer class="main-footer">
                     <!-- To the right -->
                     <div class="pull-right hidden-xs">
-                        Anything you want
+                    <!-- 
+                        some info
+                     -->
                     </div>
                     <!-- Default to the left -->
-                    <strong>Copyright &copy; 2016 <a href="#">Company</a>.</strong> All rights reserved.
+                    <strong>Copyright &copy; 2016 <a href="#">乐活集科技有限公司</a>.</strong> All rights reserved.
                 </footer>
                 <!-- Control Sidebar -->
                 <aside class="control-sidebar control-sidebar-dark">
@@ -395,6 +389,36 @@ desired effect
                 <div class="control-sidebar-bg"></div>
             </div>
             <!-- ./wrapper -->
+            <script>  
+				$(function(){
+							//菜单保持选中状态
+							//TODO 第一次登陆要清除cookie
+							//TODO 注销也要清除cookie
+					
+				           if( $.cookie("curMenu") ){
+				        	   var curMenu = $("li[role="+$.cookie("curMenu")+"]");
+				        	   if(curMenu){
+									  //移除其他选中项
+									  $(curMenu).parents(".sidebar-menu").first().find("li.active").removeClass("active");
+									 //增加active和父ul的active，移除其他active
+									  if(!$(curMenu).hasClass("active")){
+											$(curMenu).addClass("active");
+						        	   }
+									  var parentMenu = $(curMenu).parents("li").filter(".treeview");
+						        	  if( parentMenu.length &&  !parentMenu.hasClass("active") && parentMenu.addClass("active")){ 
+						        	  }
+				        	   }
+				           }
+							
+						  //点击：没有连接跳转，父菜单父，都不放入cookie
+				           $(".sidebar-menu").filter("ul").find("li").click(function(){
+				        	   if( $("a",$(this)) && $("a",$(this)).attr("href") &&  $("a",$(this)).attr("href")!="#" ){
+				        		   //js创建的cookie默认当前页面可访问，设置路径其他页面则可访问
+				        		   $.cookie('curMenu', $(this).attr("role"),{ expires: 1, path: '/' });
+				        	   }
+				           });
+				})
+				</script>
         </body>
 
         </html>

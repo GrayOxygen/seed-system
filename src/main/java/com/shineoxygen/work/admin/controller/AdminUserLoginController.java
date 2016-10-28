@@ -1,7 +1,5 @@
 package com.shineoxygen.work.admin.controller;
 
-import java.util.List;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +16,6 @@ import com.shineoxygen.work.admin.model.AdminUser;
 import com.shineoxygen.work.admin.service.AdminUserService;
 import com.shineoxygen.work.base.controller.BaseAdminController;
 import com.shineoxygen.work.base.controller.BaseController;
-import com.shineoxygen.work.temp.HomeController;
 
 /**
  * 后台用户登录

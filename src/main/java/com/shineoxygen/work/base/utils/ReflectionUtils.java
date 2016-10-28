@@ -5,20 +5,26 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import javax.activation.FileDataSource;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.util.Assert;
 
-public class ReflectionUtils {
-	private static final Map<String, Field> FieldCache = Collections.synchronizedMap(new WeakHashMap());
+import com.shineoxygen.work.base.utils.annotation.ExtendParent;
 
-	private static final Map<Class, Object> FieldsCache = Collections.synchronizedMap(new WeakHashMap());
-	public static final String CGLIB_CLASS_SEPARATOR = "$$";
+@SuppressWarnings("all")
+public class ReflectionUtils {
+
 	private static Logger logger = LogManager.getLogger(ReflectionUtils.class);
 
 	public static Object invokeGetterMethod(Object object, Method method) {
@@ -188,6 +194,36 @@ public class ReflectionUtils {
 		return new RuntimeException("Unexpected Checked Exception.", e);
 	}
 
+	public static List<Field> findAllField(Class c) {
+		return findAllField(c, null);
+	}
+
+	public static Field[] findAllFieldArray(Class c, String... filterFields) {
+		List<Field> list = findAllField(c, Arrays.asList(filterFields));
+		return list.toArray(new Field[0]);
+	}
+
+	public static List<Field> findAllField(Class c, List<String> filterFields) {
+		List list = new ArrayList(12);
+		try {
+			Field[] fields = c.getDeclaredFields();
+			for (Field f : fields) {
+				if ((filterFields == null) || (!(filterFields.contains(f.getName())))) {
+					list.add(f);
+				}
+			}
+
+			Class parent = c.getSuperclass();
+			boolean hasAnnotation = null == parent ? false : parent.isAnnotationPresent(ExtendParent.class);
+			if (hasAnnotation) {
+				list.addAll(findAllField(parent, filterFields));
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return list;
+	}
+
 	public static void setFieldVlaue(Object obj, Field field, String value) throws Exception {
 		field.setAccessible(true);
 		if ((field.getType() == Boolean.TYPE) || (field.getType() == Boolean.class))
@@ -241,92 +277,97 @@ public class ReflectionUtils {
 		return obj.getClass().getName() + "_" + fieldName;
 	}
 
-	public static void setFieldVlaue(Object obj, String fieldName, Object value) {
-		Field field = null;
+	// public static void setFieldVlaue(Object obj, String fieldName, Object
+	// value) {
+	// Field field = null;
+	// try {
+	// String key = getFieldCacheKey(obj, fieldName);
+	// field = (Field) FieldCache.get(key);
+	// if (field == null) {
+	// Class clazz = obj.getClass();
+	// for (; clazz != Object.class; clazz = clazz.getSuperclass()) {
+	// try {
+	// field = clazz.getDeclaredField(fieldName);
+	// field.setAccessible(true);
+	// FieldCache.put(key, field);
+	// } catch (Exception localException1) {
+	// }
+	// }
+	//
+	// }
+	//
+	// if (field == null)
+	// return;
+	// if (value == null) {
+	// field.set(obj, null);
+	// return;
+	// }
+	// if ((((field.getType() == Boolean.TYPE) || (field.getType() ==
+	// Boolean.class))) && (value.getClass() != Boolean.TYPE) &&
+	// (value.getClass() != Boolean.class)) {
+	// if (value.getClass() == String.class) {
+	// String str = (String) value;
+	// if (str.equalsIgnoreCase("true")) {
+	// field.set(obj, Boolean.valueOf(true));
+	// return;
+	// }
+	// if (str.equalsIgnoreCase("false")) {
+	// field.set(obj, Boolean.valueOf(false));
+	//
+	// return;
+	// }
+	// }
+	// Number n = (Number) value;
+	// field.set(obj, Boolean.valueOf(n.intValue() == 1));
+	//
+	// return;
+	// }
+	// field.set(obj, value);
+	// } catch (Exception e) {
+	// if (field != null) {
+	// System.out.println(field.getName() + ":" + value);
+	// }
+	// throw new RuntimeException(e);
+	// }
+	// }
+
+	// public static Field getField(Object obj, String fieldName) throws
+	// SecurityException, NoSuchFieldException {
+	// String key = getFieldCacheKey(obj, fieldName);
+	// Field field = (Field) FieldCache.get(key);
+	// if (field != null)
+	// return field;
+	// Class c = obj.getClass();
+	// field = c.getDeclaredField(fieldName);
+	// field.setAccessible(true);
+	// FieldCache.put(key, field);
+	// return field;
+	// }
+
+	// public static Object getFieldVlaue(Object obj, String fieldName) throws
+	// SecurityException, NoSuchFieldException, IllegalArgumentException,
+	// IllegalAccessException {
+	// Field field = getField(obj, fieldName);
+	// if (field != null) {
+	// return field.get(obj);
+	// }
+	// return null;
+	// }
+
+	public static List<Field> findNotNullField(Object obj) {
+		Class c = obj.getClass();
+		List list = new ArrayList(10);
 		try {
-			String key = getFieldCacheKey(obj, fieldName);
-			field = (Field) FieldCache.get(key);
-			if (field == null) {
-				Class clazz = obj.getClass();
-				for (; clazz != Object.class; clazz = clazz.getSuperclass()) {
-					try {
-						field = clazz.getDeclaredField(fieldName);
-						field.setAccessible(true);
-						FieldCache.put(key, field);
-					} catch (Exception localException1) {
-					}
-				}
-
+			List<Field> fields = findAllField(c);
+			for (Field f : fields) {
+				f.setAccessible(true);
+				if (f.get(obj) != null)
+					list.add(f);
 			}
-
-			if (field == null)
-				return;
-			if (value == null) {
-				field.set(obj, null);
-				return;
-			}
-			if ((((field.getType() == Boolean.TYPE) || (field.getType() == Boolean.class))) && (value.getClass() != Boolean.TYPE) && (value.getClass() != Boolean.class)) {
-				if (value.getClass() == String.class) {
-					String str = (String) value;
-					if (str.equalsIgnoreCase("true")) {
-						field.set(obj, Boolean.valueOf(true));
-						return;
-					}
-					if (str.equalsIgnoreCase("false")) {
-						field.set(obj, Boolean.valueOf(false));
-
-						return;
-					}
-				}
-				Number n = (Number) value;
-				field.set(obj, Boolean.valueOf(n.intValue() == 1));
-
-				return;
-			}
-			field.set(obj, value);
 		} catch (Exception e) {
-			if (field != null) {
-				System.out.println(field.getName() + ":" + value);
-			}
 			throw new RuntimeException(e);
 		}
-	}
-
-	public static Field getField(Object obj, String fieldName) throws SecurityException, NoSuchFieldException {
-		String key = getFieldCacheKey(obj, fieldName);
-		Field field = (Field) FieldCache.get(key);
-		if (field != null)
-			return field;
-		Class c = obj.getClass();
-		field = c.getDeclaredField(fieldName);
-		field.setAccessible(true);
-		FieldCache.put(key, field);
-		return field;
-	}
-
-	public static boolean constainsField(Object obj, String fieldName) throws SecurityException {
-		String key = getFieldCacheKey(obj, fieldName);
-		Field field = (Field) FieldCache.get(key);
-		if (field != null) {
-			return true;
-		}
-		Class c = obj.getClass();
-		try {
-			field = c.getDeclaredField(fieldName);
-		} catch (NoSuchFieldException e) {
-			return false;
-		}
-		field.setAccessible(true);
-		FieldCache.put(key, field);
-		return true;
-	}
-
-	public static Object getFieldVlaue(Object obj, String fieldName) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		Field field = getField(obj, fieldName);
-		if (field != null) {
-			return field.get(obj);
-		}
-		return null;
+		return list;
 	}
 
 	public static boolean isBaseType(Field f) {

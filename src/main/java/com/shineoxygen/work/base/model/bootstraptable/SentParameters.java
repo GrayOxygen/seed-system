@@ -4,12 +4,18 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+
+import com.shineoxygen.work.base.model.page.Page;
+import com.shineoxygen.work.base.model.page.QueryCondition;
 
 /**
  * 
@@ -17,16 +23,21 @@ import org.apache.commons.beanutils.BeanUtils;
  * @date 2016年10月25日 下午3:40:01
  * @Description bootsrap datatable发送给服务端的请求数据
  */
-public class SentParameters extends QueryCriteria {
+public class SentParameters extends QueryCondition {
+	// 请求次数
 	private Integer draw;
-	private Integer start;
-	private Integer length;
+	// 开始记录下标
+	private Integer start = 0;
+	// 一页记录数
+	private Integer length = 10;
+	// 全局搜索
 	private Search search = new Search();
+	// 列信息
 	private List<Column> columns = new ArrayList<>();
+	// 排序
 	private List<Order> order = new ArrayList<>();
 	// 定义一个datatable列与POJO的属性名之间的映射关系，便于排序
 	private ColumnProperty columnProperty = new ColumnProperty();
-
 
 	public void wrapColumns(Map<String, List<String>> columnMap) throws IllegalAccessException, InvocationTargetException {
 		Iterator<Entry<String, List<String>>> iterator = columnMap.entrySet().iterator();
@@ -54,6 +65,25 @@ public class SentParameters extends QueryCriteria {
 			}
 			this.addOrder(order);
 		}
+	}
+
+	/**
+	 * 转为spring data 的Order对象
+	 * 
+	 * @return
+	 */
+	public List<org.springframework.data.domain.Sort.Order> toSpringOrder() {
+		List<org.springframework.data.domain.Sort.Order> destList = new ArrayList<>();
+		for (Order order : this.order) {
+			org.springframework.data.domain.Sort.Order temp = new org.springframework.data.domain.Sort.Order(Direction.fromString(order.getDir()), order.getProperty());
+			destList.add(temp);
+		}
+		return destList;
+	}
+
+	public Pageable toSpringPage() {
+		Sort sort = new Sort(this.toSpringOrder());
+		return new PageRequest(this.getStart() / this.getLength(), this.getLength(), sort);
 	}
 
 	// datatable的列与属性名称对应关系
@@ -145,8 +175,5 @@ public class SentParameters extends QueryCriteria {
 	public void setColumnProperty(ColumnProperty columnProperty) {
 		this.columnProperty = columnProperty;
 	}
-
-
-
 
 }

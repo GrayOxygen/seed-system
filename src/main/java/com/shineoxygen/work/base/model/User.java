@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.shineoxygen.work.base.utils.annotation.ExtendParent;
 
 /**
  * 
@@ -15,6 +16,7 @@ import com.alibaba.fastjson.annotation.JSONField;
  * @Description 所有用户父类
  */
 @SuppressWarnings("serial")
+@ExtendParent(extendParentField=true)
 public abstract class User extends UnDeletedEntity {
 	@JSONField(serialize = false)
 	private String pwd; // 登录密码

@@ -7,8 +7,10 @@ import org.springframework.data.annotation.Id;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import com.shineoxygen.work.base.utils.annotation.ExtendParent;
 
 @SuppressWarnings("serial")
+@ExtendParent(extendParentField=true)
 public abstract class BaseEntity implements Serializable {
 	@Id
 	private String id;

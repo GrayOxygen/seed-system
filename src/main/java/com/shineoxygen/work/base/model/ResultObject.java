@@ -28,12 +28,12 @@ public class ResultObject {
 		this.message = message;
 	}
 
-	public static String sucResultJSON(String msg) {
-		return JSON.toJSONString(new ResultObject(true, msg), true);
+	public static ResultObject sucResult(String msg) {
+		return new ResultObject(true, msg);
 	}
 
-	public static String errResultJSON(String msg) {
-		return JSON.toJSONString(new ResultObject(true, msg), true);
+	public static ResultObject errResult(String msg) {
+		return new ResultObject(false, msg);
 	}
 
 	public String toJson() {

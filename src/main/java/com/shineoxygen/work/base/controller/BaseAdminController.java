@@ -6,11 +6,8 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,13 +16,14 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.ui.Model;
 
 import com.shineoxygen.work.admin.model.AdminUser;
 import com.shineoxygen.work.admin.service.AdminUserService;
-import com.shineoxygen.work.base.model.bootstraptable.Column;
 import com.shineoxygen.work.base.model.bootstraptable.SentParameters;
-import com.shineoxygen.work.base.utils.ReflectionUtils;
 import com.shineoxygen.work.base.utils.RegexUtil;
 
 public class BaseAdminController extends BaseController {
@@ -119,7 +117,8 @@ public class BaseAdminController extends BaseController {
 	}
 
 	/**
-	 * 包装bootstrap datatable传到后台的参数
+	 * 解析bootstrap datatable传到后台的参数
+	 * （datatable默认用ajax:{}传来的参数进行解析，因为存在二维数组的参数不能自动绑定）
 	 * 
 	 * @param bytes
 	 * @return
@@ -154,13 +153,13 @@ public class BaseAdminController extends BaseController {
 					BeanUtils.setProperty(sentParameters, temp.substring(0, temp.indexOf("]")), array[1]);
 				}
 			}
-			// 设置datatable列与POJO属性名称的关系
+			// 设置datatable列与POJO属性名称的关系，出来的参数为"0":"userName","1":"age"这种
 			if (RegexUtil.isMatch(str, "\\d+=\\w+")) {
 				if (array.length > 1) {
 					sentParameters.getColumnProperty().addRelation(Integer.parseInt(array[0]), array[1]);
 				}
 			}
-			// 自定义的查询条件
+			// 自定义的查询条件，如filters[userName]=wang
 			if (StringUtils.isNoneBlank(array[0]) && RegexUtil.isMatch(str, "filters\\[.+\\]")) {
 				String temp = StringUtils.replace(str, "[", ".");
 				if (array.length > 1) {// 确保有值
@@ -181,6 +180,21 @@ public class BaseAdminController extends BaseController {
 		sentParameters.getColumnProperty().wireRelation();
 
 		return sentParameters;
+	}
+
+	/**
+	 * 获取bootstrap datable前台参数，转为spring data的分页对象
+	 * 
+	 * @param bytes
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	public static Pageable toPageable(byte[] bytes) throws UnsupportedEncodingException, IllegalAccessException, InvocationTargetException {
+		SentParameters sentParameters = wrapSentParameters(bytes);
+		Sort sort = new Sort(sentParameters.toSpringOrder());
+		return new PageRequest(sentParameters.getStart() / sentParameters.getLength(), sentParameters.getLength(), sort);
 	}
 
 }

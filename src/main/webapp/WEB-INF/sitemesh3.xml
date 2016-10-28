@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sitemesh>
 	<!-- <mapping path="/*" decorator="/WEB-INF/views/tempTest/decorator.jsp"/> -->
-	<mapping path="/*"   decorator="/WEB-INF/layout/admin_main.jsp" />
+	 <mapping>
+	    <path>/*</path>
+	    <decorator>/WEB-INF/layout/admin_main.jsp</decorator>
+	  </mapping>
 	
-	<mapping path="/admin/*" exclue="true"/>
+	<mapping path="/admin/login" exclue="true"/>
+	<mapping path="/admin/logout" exclue="true"/>
 </sitemesh>

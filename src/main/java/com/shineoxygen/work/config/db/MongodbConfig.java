@@ -14,11 +14,13 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.data.web.config.SpringDataWebConfiguration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
-import com.shineoxygen.work.base.dao.impl.BaseMongoRepositoryImpl;
+import com.shineoxygen.work.base.repo.impl.UndeletedMongoRepositoryImpl;
 
 /**
  * mongodb数据库配置
@@ -29,10 +31,9 @@ import com.shineoxygen.work.base.dao.impl.BaseMongoRepositoryImpl;
 @Configuration
 @PropertySources(value = { @PropertySource(value = "classpath:mongodb.properties") })
 // 开启Mongo Repository自定义功能，才能给repository或自己的dao自定义方法
-@EnableMongoRepositories(basePackages = { "com.shineoxygen.work.temp", "com.shineoxygen.work.**.dao" }, repositoryBaseClass = BaseMongoRepositoryImpl.class)
+@EnableMongoRepositories(basePackages = { "com.shineoxygen.work.temp", "com.shineoxygen.work.**.repo" }, repositoryBaseClass = UndeletedMongoRepositoryImpl.class)
 // 增加spring data对web的特性支持
-@EnableSpringDataWebSupport
-public class MongodbConfig {
+public class MongodbConfig  {
 	@Autowired
 	private Environment env;
 

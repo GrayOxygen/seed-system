@@ -2,6 +2,8 @@ package com.shineoxygen.work.base.model;
 
 import org.springframework.data.mongodb.core.index.Indexed;
 
+import com.shineoxygen.work.base.utils.annotation.ExtendParent;
+
 /**
  * 
  * @author 王辉阳
@@ -9,6 +11,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
  * @Description 假删除model
  */
 @SuppressWarnings("all")
+@ExtendParent(extendParentField = true)
 public abstract class UnDeletedEntity extends BaseEntity {
 	@Indexed
 	private Boolean deleted;

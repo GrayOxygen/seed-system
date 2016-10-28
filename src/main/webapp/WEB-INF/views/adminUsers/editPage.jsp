@@ -1,123 +1,154 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
-<%@ include file="/common/taglibs.jsp"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<%@ include file="/resources/common/taglibs.jsp"%>
+<!DOCTYPE html  >
+<html >
 <head>
-<title>集约平台-编辑下级用户</title>
-<%@ include file="/common/commonJS.jsp"%>
-
-<script type="text/javascript" src="${app_static}/js/date/WdatePicker.js"></script>
-
-<script type="text/javascript" src="${app_static}/js/Validform_v5.3.2/Validform_v5.3.2_min.js"></script>
-<link rel="stylesheet" href="${app_static}/js/Validform_v5.3.2/Validform_v5.3.2/demo/css/style.css" />
-
-<link rel="stylesheet" type="text/css" href="${app_static}/js/jquery-easyui-1.4.3/themes/default/easyui.css">
-<link rel="stylesheet" type="text/css" href="${app_static}/js/jquery-easyui-1.4.3/themes/icon.css">
-<link rel="stylesheet" type="text/css" href="${app_static}/js/jquery-easyui-1.4.3/demo/demo.css">
-<script type="text/javascript" src="${app_static}/js/jquery-easyui-1.4.3/jquery.easyui.min.js"></script>
-
-<script>
-function submitTheFm(){
-	 if(!$("#nodeId").combotree("getValue")){
-		    var dialog = weiweiDefinedDialog("dialog",{},true);
-			$("#msgId").text("请选择所属组织！");
-			dialog.dialog("open");
-	 }else{
-		 $("#submitForm").submit();
-	 }
+<title>修改用户</title>
+    <!-- bootstrapValidator -->
+	  <link rel="stylesheet" href="${static}/plugins/projectSpecific/bootstrapValidator/css/bootstrapValidator.min.css">
+<style>
+#currentBodyContent {
+	width:50%
 }
-
-$(function(){
-	 //层级树change事件
-    $("#nodeId").combotree({
-      value:"${module.nodeId}",
-      url:'${ctx}/admin/orgNode/getSelfAndSonTree.do',
-  	  "onChange":function(newValue,oldValue){
-  		  		$("#selectedNodeId").val(newValue);
-    	   }
-    });
-	 
-	
-	//ajax提交表单
-	 $("#submitForm").Validform({
-			ajaxPost:true,
-			callback:function(resultObj){//回调方法
-				if(resultObj&&resultObj.success==false){
-					var dialog = weiweiDefinedDialog("dialog",{},true);
-					$("#msgId").text(resultObj.message);
-					dialog.dialog("open");
-				}else{
-					top.location.href="${ctx}/admin/sys/adminUserList.do";
-				}
-			},tiptype:function(msg,o,cssctl){
-				//msg：提示信息;
-				//o:{obj:*,type:*,curform:*}, obj指向的是当前验证的表单元素（或表单对象），type指示提示的状态，值为1、2、3、4， 1：正在检测/提交数据，2：通过验证，3：验证失败，4：提示ignore状态, curform为当前form对象;
-				//cssctl:内置的提示信息样式控制函数，该函数需传入两个参数：显示提示信息的对象 和 当前提示的状态（既形参o中的type）;
-				if(!o.obj.is("form")){//验证表单元素时o.obj为该表单元素，全部验证通过提交表单时o.obj为该表单对象;   ajax前调用的校验信息
-					var objtip=o.obj.siblings(".Validform_checktip");
-					//第三个参数在源码基础上加的，true表示校验通过移除消息提示控件所有样式，false表示显示默认绿色勾图标
-					cssctl(objtip,o.type,true);
-					objtip.text(msg);
-				} 
-			}
-	});
-});
-</script>
+</style>
 </head>
+
 <body>
-<div id="dialog"  >
-  <p id="msgId"> </p>
-</div>
-	<div class="oper_right">
-		<div class="oper_rtit" style="padding-top: 15px;padding-left: 15px;padding-bottom: -15px">
-			<span style="font-size: medium;">【编辑下级用户】</span>
-		</div>
-		<div class="oper_rwrp"></div>
-		<form action="${ctx}/admin/sys/editAdminUser.do" method="post" id="submitForm">
-		<div class="ma_fr">
-			<span id="msgMsg" style="color:red">${message}</span>
-			<input type="hidden"  name="id" value="${module.id}"></input>
-			<div class="ma_line fl">
-				<div>
-			      <div class="ma_line fl mt10">
-			        <div class="ma_info fl">所属组织：</div>
-					<!-- 组织层级树 -->
-					<input class="easyui-combotree"  id="nodeId"    style="width:200px;">
-					<input   id="selectedNodeId" name="nodeId" hidden="true"  nullmsg="请输入手机号！" errormsg="请选择所属组织！"/>
-					<label   id="nodeMSGID" class="error" style="display: none;" >请选择层级节点</label>
-			      </div>
-				<div>
-			        <span class="Validform_checktip"></span>
-				</div>
-			        
-				</div>
-			</div>
-			<div class="ma_line fl">
-				<div class="ma_info fl">管理员名称：</div>
-				<div>
-				<input type="text" name="username" value="${module.username}" class="ma_def textfoc"   /> 
-				</div>
-			</div>
-			<div class="ma_line fl">
-				<div class="ma_info fl">管理员手机号：</div>
-				<div>
-				<input type="text" name="phoneNum" class="ma_def textfoc" value="${module.phoneNum}" nullmsg="请输入手机号！" datatype="m"  errormsg="手好号码格式有误！" /><span class="Validform_checktip"></span>
-				</div>
-			</div>
-			<div class="ma_line fl">
-				<div class="ma_info fl">默认密码：</div>
-				<div>
-				<input type="password" name="defaultPwd" class="ma_def textfoc" value="${module.defaultPwd}" datatype="*6-16" nullmsg="请设置密码！" errormsg="密码范围在6~16位之间！"  /><span class="Validform_checktip"></span>
-				</div>
-			</div>
-			<div class="ml160 mb10 fl">
-				<a href="javascript:submitTheFm();" class="btn61">确定</a>
-				<a href="javascript:cancel();" class="btn61">取消</a>
-			</div>
-			<div class="clr"></div>
-		</div>
-		</form>
-		<div class="clr"></div>
-	</div>
+           <div  id="currentBodyContent" class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title"></h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form class="form-horizontal"  action="javascript:;"  id="submitForm"  method="POST">
+              <input type="hidden"   name="id" value="${model.id }">
+              <div class="box-body">
+              	 <div class="form-group">
+                  <label for="userName" class="col-sm-2 control-label">用户名</label>
+
+                  <div class="col-sm-5">
+                    <input type="text" class="form-control" id="userName"  name="userName" placeholder="用户名"  value="${model.userName}">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="pwd" class="col-sm-2 control-label">密码</label>
+
+                  <div class="col-sm-5">
+                    <input type="password" class="form-control" id="pwd"  name="pwd"   placeholder="密码"  value="">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="email" class="col-sm-2 control-label">邮箱</label>
+
+                  <div class="col-sm-5">
+                    <input type="email" class="form-control" id="email"  name="email" placeholder="邮箱" value="${model.email }">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="phoneNum" class="col-sm-2 control-label">手机号码</label>
+
+                  <div class="col-sm-5">
+                    <input type="text" class="form-control" id="phoneNum"  name="phoneNum"   placeholder="手机号码" value="${model.phoneNum}">
+                  </div>
+                </div>
+              </div>
+              <!-- /.box-body -->
+              <div class="box-footer">
+                <button type="button" class="btn btn-default" id="cancelBtn">取消</button>
+                <button type="button" class="btn btn-info pull-right " id="submitBtn">提交</button>
+              </div>
+              <!-- /.box-footer -->
+            </form>
+          </div>
+          
+          
+          
+          
+          <!-- /.box -->
+          <%@ include file="/resources/common/required_js.jsp"%>
+		 <%@ include file="/resources/common/bootstrap_alert.jsp"%>
+		  <script type="text/javascript" src="${static}/plugins/projectSpecific/bootstrapValidator/js/bootstrapValidator.min.js"></script>
+          <script>
+		$(function(){
+			$("#cancelBtn").click(function(){
+				window.location.href="${ctx}/adminUsers/listPage.do"
+			})
+		  	// 点击之前聚焦校验
+		  	$("#submitBtn").focus(function(){
+					 $("#submitForm").data('bootstrapValidator').validate();
+			 });
+			 // 提交点击事件
+			$("#submitBtn").click(function(){
+				// 校验通过
+				if($("#submitForm").data('bootstrapValidator').isValid()){
+				
+				   var formData = new FormData($("#submitForm")[0]);
+					$.ajax({
+						url:"${ctx}/adminUsers/edit" ,
+						type:"POST",
+						data:formData ,
+						processData: false,  // 告诉jQuery不要去处理发送的数据
+						contentType: false,   // 告诉jQuery不要去设置Content-Type请求头
+						success:function(result){
+							if(result&&result.success==true){
+								openAlert(result.message);
+								setTimeout(function(){
+									top.location.href="${ctx}/adminUsers/listPage";
+								},1000);
+							}else{
+								openAlert(result.message);
+							}
+						}
+					});
+					
+				}
+			});
+			 
+			// 加载校验器				    
+		    $('#submitForm').bootstrapValidator({
+		        fields: {
+		        	userName: {
+		                message: '当前值无效',
+		                validators: {
+		                    notEmpty: {
+		                        message: '账号不能为空'
+		                    },
+		                    stringLength: {
+		                        min: 1,
+		                        max: 25,
+		                        message: '账号长度不能大于25个字符'
+		                    }
+		                }
+		            },
+		            pwd: {
+		                message: '当前值无效',
+		                validators: {
+		                    notEmpty: {
+		                        message: '密码不能为空'
+		                    },
+		                    stringLength: {
+		                        min: 6,
+		                        max: 12,
+		                        message: '密码长度6到12位'
+		                    }
+		                }
+		            },
+		            phoneNum: {
+		                message: '当前值无效',
+		                validators: {
+		                    notEmpty: {
+		                        message: '手机号码不能为空'
+		                    },
+		                    regexp: {
+		                        regexp: /^(1[2-9][0-9])[0-9]{8}$/,
+		                        message: '手机号格式不合法'
+		                    }
+		                }
+		            } 
+		        }
+		    });
+		})
+		
+</script>
 </body>
 </html>
