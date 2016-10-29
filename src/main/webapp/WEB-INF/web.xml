@@ -5,11 +5,25 @@
 	version="2.5">
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/spring/root-context.xml</param-value>
+		<param-value>/WEB-INF/spring/root-context.xml,classpath*:applicationContext*.xml </param-value>
 	</context-param>
+		<!-- 加载spring父容器 -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+	<!-- shiro过滤器交给spring管理 -->
+	<filter>
+		<filter-name>adminShiroFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetFilterLifecycle</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>adminShiroFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 	<filter>
 		<filter-name>sitemesh</filter-name>
 		<filter-class>org.sitemesh.config.ConfigurableSiteMeshFilter</filter-class>
@@ -18,6 +32,7 @@
 		<filter-name>sitemesh</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+	<!-- spring子容器 -->
 	<servlet>
 		<servlet-name>appServlet</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -31,19 +46,7 @@
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-	<!-- shiro过滤器交给spring管理 -->
-	<filter>
-		<filter-name>adminShiroFilter</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-		<init-param>
-			<param-name>targetFilterLifecycle</param-name>
-			<param-value>true</param-value>
-		</init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>adminShiroFilter</filter-name>
-		<url-pattern>/admin/*</url-pattern>
-	</filter-mapping>
+
 
 	<welcome-file-list>
 		<welcome-file>/WEB-INF/views/login.jsp</welcome-file>

@@ -26,6 +26,7 @@ import com.shineoxygen.work.base.controller.BaseAdminController;
 import com.shineoxygen.work.base.model.ResultObject;
 import com.shineoxygen.work.base.model.bootstraptable.TablePage;
 import com.shineoxygen.work.base.model.page.QueryCondition;
+import com.shineoxygen.work.base.utils.RequestResponseUtil;
 
 /**
  * 用户管理
@@ -44,6 +45,7 @@ public class AdminUserMgrController extends BaseAdminController {
 
 	@RequestMapping(value = "/listPage")
 	public String listPage() {
+		System.out.println(RequestResponseUtil.getCurrentRequest().getSession().getAttribute("ADMINUSER"));
 		return "adminUsers/listPage";
 	}
 

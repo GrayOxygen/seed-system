@@ -4,6 +4,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -61,10 +62,10 @@ public class AdminUserLoginController extends BaseAdminController {
 			}
 		}
 
-		if (StringUtils.isAnyBlank(userName, pwd, message)) {
+		if (StringUtils.isAnyBlank(userName, pwd )||null!=message) {
 			return "admin/login";
 		}
-		UsernamePasswordToken token = new UsernamePasswordToken(userName, pwd);
+		UsernamePasswordToken token = new UsernamePasswordToken(userName,  pwd);
 		// token.setRememberMe(true); //暂时不需要
 		Subject subject = SecurityUtils.getSubject();
 		try {
@@ -75,11 +76,12 @@ public class AdminUserLoginController extends BaseAdminController {
 		}
 
 		if (subject.isAuthenticated()) {
-			AdminUser user = adminUserSrv.findByUserNameAndPwd(userName, pwd);
+			AdminUser user = adminUserSrv.findByUserNameAndPwd(userName,  pwd);
 			if (null != user) {
 				BaseAdminController.setAdminUserSession(req, user);
 				return "redirect:/admin/index.do";
 			}
+			modelMap.addAttribute("message", "用户不存在");
 			logger.warn("登陆失败，" + userName + " 用户不存在，ip：" + BaseController.getReqIp(req));
 
 		}
@@ -115,7 +117,7 @@ public class AdminUserLoginController extends BaseAdminController {
 		Subject subject = SecurityUtils.getSubject();
 		subject.logout();
 		logger.info("用户:{}已注销", subject.getPrincipal());
-		return "redirect:login.do";
+		return "redirect:login";
 	}
 
 	/**
@@ -128,7 +130,7 @@ public class AdminUserLoginController extends BaseAdminController {
 		return "/admin/index";
 	}
 
-	@RequestMapping("/unauthorized")
+	@RequestMapping("/admin/unauthorized")
 	public String toUnauthorized() {
 		return "/error/unauthorized";
 	}

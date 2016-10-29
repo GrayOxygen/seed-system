@@ -23,9 +23,19 @@
     		http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
 	<!-- DispatcherServlet Context: defines this servlet's request-processing 
 		infrastructure -->
-
+	<!-- spring 的web 容器配置，即web.xml创建的spring子容器
+		spring容器加载：
+		1，ContextLoaderListener加载spring容器，spring本身的核心容器，维护service dao的上下文
+		2，DispatcherServlet加载spring的web容器，上下文为controller的上下文，将之前加载的容器标记为父容器
+		3，如果AdminRealm由父容器加载，即context-param的contextConfigLocation指向的xml配置文件仅仅定义了一个bean，
+		 	而使用的是@Autowired注入，但没有开启扫描，注入的bean假设是个service并被子容器扫描加载
+			则会导致父容器bean需要注入时找不到bean，父不可找子，子可找父。
+		
+		，建议：父容器扫描controller，子容器扫描其他 -->
 	<!-- Enables the Spring MVC @Controller programming model -->
-	<context:component-scan base-package="com.shineoxygen.work" />
+	<context:component-scan base-package="com.shineoxygen.work">
+		<context:include-filter type="annotation"		expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
 		up static resources in the ${webappRoot}/resources directory -->

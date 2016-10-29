@@ -217,10 +217,10 @@ desired effect
                                         <!-- Menu Footer-->
                                         <li class="user-footer">
                                             <div class="pull-left">
-                                                <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                                <a href="#" class="btn btn-default btn-flat">个人信息</a>
                                             </div>
                                             <div class="pull-right">
-                                                <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                                                <a href="${ctx}/admin/logout" class="btn btn-default btn-flat">注销</a>
                                             </div>
                                         </li>
                                     </ul>
