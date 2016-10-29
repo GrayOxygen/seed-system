@@ -24,9 +24,9 @@ public class AdminUserRepoTest {
 	@Test
 	public void save() {
 		AdminUser user = new AdminUser();
-		user.setUserName("admin");
+		user.setUserName("readPerm");
 		user.setPwd(DigestUtils.md5Hex("111111"));
-		user.setId("0");
+		user.setBuildin(false);
 		adminUserRepo.save(user);
 	}
 

@@ -54,7 +54,6 @@ public class AdminUserMgrController extends BaseAdminController {
 
 	@RequestMapping(value = "/editPage", method = RequestMethod.GET)
 	public String editPage(@RequestParam("id") AdminUser model, ModelMap modelMap) {
-		System.out.println(model);
 		modelMap.put("model", model);
 		return "adminUsers/editPage";
 	}
@@ -72,15 +71,17 @@ public class AdminUserMgrController extends BaseAdminController {
 	 * @throws SecurityException
 	 * @throws NoSuchFieldException
 	 */
-//	@RequestMapping(value = "/list")
-//	public @ResponseBody TablePage<AdminUser> list(@RequestBody byte[] bytes, HttpServletRequest req, ModelMap modelMap)
-//			throws UnsupportedEncodingException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
-//		return adminUserSrv.bdTableList(wrapSentParameters(bytes));
-//	}
+	// @RequestMapping(value = "/list")
+	// public @ResponseBody TablePage<AdminUser> list(@RequestBody byte[] bytes,
+	// HttpServletRequest req, ModelMap modelMap)
+	// throws UnsupportedEncodingException, IllegalAccessException,
+	// InvocationTargetException, SecurityException, NoSuchFieldException {
+	// return adminUserSrv.bdTableList(wrapSentParameters(bytes));
+	// }
 	@RequestMapping(value = "/list")
-	public @ResponseBody TablePage<AdminUser> list(Pageable pageable,QueryCondition queryCondition, HttpServletRequest req, ModelMap modelMap)
+	public @ResponseBody TablePage<AdminUser> list(Pageable pageable, QueryCondition queryCondition, HttpServletRequest req, ModelMap modelMap)
 			throws UnsupportedEncodingException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchFieldException {
-		return adminUserSrv.bdTableList( pageable,queryCondition);
+		return adminUserSrv.bdTableList(pageable, queryCondition);
 	}
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
@@ -106,9 +107,13 @@ public class AdminUserMgrController extends BaseAdminController {
 		return ResultObject.sucResult("修改成功");
 	}
 
-
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
 	public @ResponseBody ResultObject delete(String[] ids) {
+		for (String id : ids) {
+			if (true == adminUserSrv.findById(id).isBuildin()) {
+				return ResultObject.sucResult("无权删除系统内置用户");
+			}
+		}
 		adminUserSrv.softDelete(ids);
 		return ResultObject.sucResult("删除成功");
 	}

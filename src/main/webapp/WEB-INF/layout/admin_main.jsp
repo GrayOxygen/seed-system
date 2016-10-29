@@ -276,9 +276,15 @@ desired effect
 						            </span>
 						          </a>
 						          <ul class="treeview-menu">
+	                            <shiro:hasPermission name="admin:adminUsers:read">
                                     <li role="adminUsers"><a href="${ctx}/adminUsers/listPage"><i class="fa fa-circle-o"> </i> <span>用户管理</span></a></li>
+	                            </shiro:hasPermission>  
+	                            <shiro:hasPermission name="admin:roles:read">
                                     <li role="roles"><a href="${ctx}/roles/listPage"><i class="fa fa-circle-o"> </i>角色管理</a></li>
+                                 </shiro:hasPermission>
+	                            <shiro:hasPermission name="admin:permissions:read">
                                     <li role="permissions"><a href="${ctx}/permissions/listPage"><i class="fa fa-circle-o"> </i>权限管理</a></li>
+                                 </shiro:hasPermission>
 						          </ul>
 						        </li>
                         </ul>

@@ -39,11 +39,8 @@ public class AdminUserService {
 	}
 
 	public AdminUser findByUserNameAndPwd(String userName, String pwd) {
-		return adminUserDao.findByUserNameAndPwd(userName, DigestUtils.md5Hex(pwd));
-	}
-
-	public AdminUser findById(String id) {
-		return adminUserDao.findOne(id);
+		QAdminUser user = new QAdminUser("adminUser");
+		return adminUserDao.findOne(user.userName.eq(userName).and(user.pwd.eq(pwd)).and(user.deleted.ne(true)));
 	}
 
 	public TablePage<AdminUser> bdTableList(SentParameters sentParameters) {
@@ -70,6 +67,16 @@ public class AdminUserService {
 
 	public boolean exist(AdminUser exist, AdminUser beside) {
 		return adminUserDao.existBeside(exist, beside);
+	}
+
+	public AdminUser findByUserName(String userName) {
+		QAdminUser user = new QAdminUser("adminUser");
+		return adminUserDao.findOne(user.userName.eq(userName).and(user.deleted.ne(true)));
+	}
+
+	public AdminUser findById(String id) {
+		QAdminUser user = new QAdminUser("adminUser");
+		return adminUserDao.findOne(user.userName.eq(id).and(user.deleted.ne(true)));
 	}
 
 }

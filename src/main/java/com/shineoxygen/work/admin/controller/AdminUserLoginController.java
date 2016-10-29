@@ -7,9 +7,15 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
+import org.eclipse.jdt.internal.compiler.batch.Main;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.shineoxygen.work.admin.model.AdminUser;
@@ -41,7 +47,7 @@ public class AdminUserLoginController extends BaseAdminController {
 	 * @return
 	 */
 	@RequestMapping("/admin/login")
-	public String login(String userName, String pwd, String captcha, String autoLoginFlag, HttpServletRequest req, HttpServletResponse res) throws Exception {
+	public String login(String userName, String pwd, String captcha, String autoLoginFlag, String message, ModelMap modelMap, HttpServletRequest req) throws Exception {
 		boolean result = true;
 		Cookie[] cookies = req.getCookies();
 		Cookie destCookie = null;
@@ -54,31 +60,30 @@ public class AdminUserLoginController extends BaseAdminController {
 				}
 			}
 		}
-		if (destCookie != null) {// 存在cookie，自动登录
-			// List<AdminUser> list =
-			// adminUserSrv.findByProperty("autoLoginSession",
-			// destCookie.getValue());
-			// if (list.size() > 0) {
-			// AdminUser user = list.get(0);
-			// BaseAdminController.setAdminUserSession(req, user);
-			// } else {
-			// return "admin/login";
-			// }
-		} else {
 
-			if (StringUtils.isAnyBlank(userName, pwd ) ) {
-				return "admin/login";
-			}
-
-			AdminUser user = adminUserSrv.findByUserNameAndPwd(userName, pwd);
-			if (null == user) {
-				logger.warn("登陆失败，" + userName + " 用户不存在，ip：" + BaseController.getReqIp(req));
-			}
-
-			BaseAdminController.setAdminUserSession(req, user);
-			return "redirect:/admin/index.do";
+		if (StringUtils.isAnyBlank(userName, pwd, message)) {
+			return "admin/login";
 		}
-		return "admin/login";
+		UsernamePasswordToken token = new UsernamePasswordToken(userName, pwd);
+		// token.setRememberMe(true); //暂时不需要
+		Subject subject = SecurityUtils.getSubject();
+		try {
+			subject.login(token);
+		} catch (AuthenticationException e) {
+			logger.info("管理用户：{} 登录失败", userName);
+			modelMap.addAttribute("message", "账号或者密码错误");
+		}
+
+		if (subject.isAuthenticated()) {
+			AdminUser user = adminUserSrv.findByUserNameAndPwd(userName, pwd);
+			if (null != user) {
+				BaseAdminController.setAdminUserSession(req, user);
+				return "redirect:/admin/index.do";
+			}
+			logger.warn("登陆失败，" + userName + " 用户不存在，ip：" + BaseController.getReqIp(req));
+
+		}
+		return "/admin/login";
 	}
 
 	/**
@@ -107,17 +112,25 @@ public class AdminUserLoginController extends BaseAdminController {
 	 */
 	@RequestMapping("/admin/logout")
 	public String logout(HttpServletRequest req, HttpServletResponse res) {
-		return "admin/login";
+		Subject subject = SecurityUtils.getSubject();
+		subject.logout();
+		logger.info("用户:{}已注销", subject.getPrincipal());
+		return "redirect:login.do";
 	}
 
 	/**
-	 * Index统计页面
+	 * Index 页面
 	 *
 	 * @return
 	 */
 	@RequestMapping("/admin/index")
 	public String toIndex(HttpServletRequest req, Model model) {
-		return "admin/index";
+		return "/admin/index";
+	}
+
+	@RequestMapping("/unauthorized")
+	public String toUnauthorized() {
+		return "/error/unauthorized";
 	}
 
 }
