@@ -71,11 +71,11 @@ public class UserRolePermissionRepoTest {
 
 		// 创建一个admin角色，一个用户查看角色
 		Role admin = new Role();
-		admin.setBuildIn(true);
+		admin.setBuildin(true);
 		admin.setName("admin");
 		roleRepo.save(admin);
 		Role userLook = new Role();
-		userLook.setBuildIn(true);
+		userLook.setBuildin(true);
 		userLook.setName("用户查看");
 		roleRepo.save(userLook);
 		// 用户角色关联

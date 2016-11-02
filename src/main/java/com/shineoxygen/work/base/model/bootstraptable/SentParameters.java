@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
-import com.shineoxygen.work.base.model.page.Page;
 import com.shineoxygen.work.base.model.page.QueryCondition;
 
 /**

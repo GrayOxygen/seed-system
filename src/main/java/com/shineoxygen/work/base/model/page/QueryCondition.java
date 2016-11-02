@@ -1,7 +1,5 @@
 package com.shineoxygen.work.base.model.page;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 

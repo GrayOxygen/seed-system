@@ -1,4 +1,5 @@
-	  var BD_CONSTANT = {
+// datatable 配置常量	
+var BD_CONSTANT = {
 	            DATA_TABLES : {
 	                DEFAULT_OPTION : { //DataTables初始化选项
 	                    language: {
@@ -48,11 +49,25 @@
 	                    ELLIPSIS: function (data, type, row, meta) {
 	                        data = data||"";
 	                        return '<span title="' + data + '">' + data + '</span>';
+	                    },
+	                    YMDDate: function (data, type, row, meta) {
+	                        data = data||""; 
+	                        if(data){
+			                        return new Date(data).format("yyyy-MM-dd");
+	                        }
+	                        return "<span></span>"
+	                    },
+	                    YMDHMSDate: function (data, type, row, meta) {
+	                        data = data||""; 
+	                        if(data){
+			                        return new Date(data).format("yyyy-MM-dd hh:mm:ss");
+	                        }
+	                        return "<span></span>"
 	                    }
 	                }
 	            }
 	    };
-	  
+	  // datatable公用对象
 	  var userManage = {
 	    	    currentItem : null,
 	    	    pageSortFormData : function(data) {
@@ -72,7 +87,7 @@
 	    		deleteItem : function(delUrl,itemArray,urlAfterSuc){
 	    			if(itemArray&&itemArray.length){
 	    				if(itemArray.length==1){
-	    					$("#msgID , .modal-body").text("确定删除"+itemArray[0].userName+"吗？");
+	    					$("#msgID , .modal-body").text("确定删除这项记录吗？");
 	    				}
 	    				if(itemArray.length>1){
 	    					$("#msgID , .modal-body").text("确定删除"+itemArray.length+"项记录吗？");

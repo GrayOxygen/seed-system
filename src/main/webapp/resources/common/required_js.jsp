@@ -14,4 +14,10 @@
 Both of these plugins are recommended to enhance the
 user experience. Slimscroll is required when using the
 fixed layout. -->
+<!-- 
+ *********************************************以上为admin lte所用js***************************************************************/
+ -->
 <script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+
+<!-- 日期格式化函数扩展js -->
+<script src="${static}/common/js/ExtendDate.js"></script>

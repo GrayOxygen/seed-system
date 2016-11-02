@@ -1,9 +1,6 @@
 package com.shineoxygen.work.admin.model;
 
-import java.util.List;
-
 import org.mongodb.morphia.annotations.Entity;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 

@@ -8,7 +8,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.shineoxygen.work.admin.model.AdminUser;
 import com.shineoxygen.work.admin.model.QAdminUser;
 import com.shineoxygen.work.admin.repo.AdminUserRepo;

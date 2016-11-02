@@ -13,9 +13,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-import org.springframework.data.web.config.EnableSpringDataWebSupport;
-import org.springframework.data.web.config.SpringDataWebConfiguration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;

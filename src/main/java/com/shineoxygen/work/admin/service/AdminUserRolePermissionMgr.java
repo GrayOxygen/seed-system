@@ -1,7 +1,6 @@
 package com.shineoxygen.work.admin.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,8 +11,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.shineoxygen.work.admin.model.AdminUserRole;
 import com.shineoxygen.work.admin.model.Permission;
 import com.shineoxygen.work.admin.model.QAdminUserRole;
@@ -27,6 +28,8 @@ import com.shineoxygen.work.admin.repo.AdminUserRoleRepo;
 import com.shineoxygen.work.admin.repo.PermissionRepo;
 import com.shineoxygen.work.admin.repo.RolePermissionRepo;
 import com.shineoxygen.work.admin.repo.RoleRepo;
+import com.shineoxygen.work.base.model.bootstraptable.TablePage;
+import com.shineoxygen.work.base.model.page.QueryCondition;
 
 @Service
 @SuppressWarnings("unchecked")
@@ -131,13 +134,174 @@ public class AdminUserRolePermissionMgr {
 		return new ArrayList<>(set);
 	}
 
+	/**
+	 * 获取所有权限菜单
+	 * 
+	 * @return
+	 */
 	public List<Permission> findAllPermissions() {
 		QPermission permission = new QPermission("permission");
 		return (List<Permission>) permissionRepo.findAll(permission.deleted.ne(true));
 	}
 
+	/**
+	 * 获取所有角色
+	 * 
+	 * @return
+	 */
 	public List<Role> findAllRoles() {
 		QRole role = new QRole("role");
 		return (List<Role>) roleRepo.findAll(role.deleted.ne(true));
+	}
+
+	/**
+	 * 分页查询角色
+	 * 
+	 * @param pageable
+	 * @param queryCondition
+	 * @return
+	 */
+	public TablePage<Role> bdTableRoleList(Pageable pageable, QueryCondition queryCondition) {
+		QRole user = new QRole("role");
+		BooleanExpression expression = user.deleted.ne(true);
+		if (queryCondition.containsNotEmpty("name")) {
+			expression = expression.and(user.name.like("%" + queryCondition.getValue("name") + "%"));
+		}
+		return roleRepo.bdTableList(expression, pageable);
+	}
+
+	/**
+	 * 保存角色，同时保存对应的权限关联
+	 * 
+	 * @param model
+	 * @param permissionIds
+	 */
+	public void saveRole(Role model, String[] permissionIds) {
+		roleRepo.save(model);
+
+		for (String permissionId : permissionIds) {
+			RolePermission rolePermission = new RolePermission();
+			rolePermission.setRoleId(model.getId());
+			rolePermission.setPermissionId(permissionId);
+			rolePermissionRepo.save(rolePermission);
+		}
+
+	}
+
+	/**
+	 * 查指定角色
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Role findRoleById(String id) {
+		QRole role = new QRole("role");
+		return roleRepo.findOne(role.id.eq(id).and(role.deleted.ne(true)));
+	}
+
+	/**
+	 * 软删除角色以及permission关联
+	 * 
+	 * @param ids
+	 */
+	public void softDeleteRoles(String[] ids) {
+		roleRepo.softDelete(ids);
+
+		softDeleteRolePermission(ids);
+
+	}
+
+	/**
+	 * 假删除RolePermission关联
+	 * 
+	 * @param roleIds
+	 *            角色id数组
+	 */
+	private void softDeleteRolePermission(String[] roleIds) {
+		QRolePermission qRolePermission = new QRolePermission("rolePermission");
+		List<RolePermission> rolePermissions = (List<RolePermission>) rolePermissionRepo.findAll(qRolePermission.roleId.in(roleIds));
+		for (RolePermission rolePermission : rolePermissions) {
+			rolePermission.setDeleted(true);
+			rolePermissionRepo.save(rolePermission);
+		}
+	}
+
+	/**
+	 * 分页查询权限菜单
+	 * 
+	 * @param pageable
+	 * @param queryCondition
+	 * @return
+	 */
+	public TablePage<Permission> bdTablePermList(Pageable pageable, QueryCondition queryCondition) {
+		QPermission perm = new QPermission("permission");
+		BooleanExpression expression = perm.deleted.ne(true);
+		if (queryCondition.containsNotEmpty("name")) {
+			expression = expression.and(perm.name.like("%" + queryCondition.getValue("name") + "%"));
+		}
+		return permissionRepo.bdTableList(expression, pageable);
+	}
+
+	/**
+	 * 获取角色的所有权限菜单id
+	 * 
+	 * @param roleId
+	 * @return
+	 */
+	public List<String> findPermIdsByRoleId(String roleId) {
+		return (List<String>) CollectionUtils.collect(findRolePermsByRoleId(roleId), new Transformer() {
+			@Override
+			public Object transform(Object input) {
+				return ((RolePermission) input).getPermissionId();
+			}
+		});
+	}
+
+	public List<RolePermission> findRolePermsByRoleId(String roleId) {
+		QRolePermission qRolePermission = new QRolePermission("qRolePermission");
+
+		return (List<RolePermission>) rolePermissionRepo.findAll(qRolePermission.roleId.eq(roleId).and(qRolePermission.deleted.ne(true)));
+	}
+
+	/**
+	 * 修改角色以及角色和权限菜单的关系
+	 * 
+	 * @param model
+	 * @param permsID
+	 *            权限菜单的id数组
+	 */
+	public void updateRole(Role model, String[] permsID) {
+		roleRepo.save(model);
+		// 无用关联假删
+		softDeleteRolePermission(new String[] { model.getId() });
+		// 插入新关联
+		for (String permissionId : permsID) {
+			RolePermission rolePermission = new RolePermission();
+			rolePermission.setRoleId(model.getId());
+			rolePermission.setPermissionId(permissionId);
+			rolePermissionRepo.save(rolePermission);
+		}
+
+	}
+
+	public List<String> findRoleIdsByAdminUserId(String adminUserId) {
+		QAdminUserRole qAdminUserRole = new QAdminUserRole("adminUserRole");
+
+		return (List<String>) CollectionUtils
+				.collect((List<AdminUserRole>) adminUserRoleRepo.findAll(qAdminUserRole.adminUserId.eq(adminUserId).and(qAdminUserRole.deleted.ne(true))), new Transformer() {
+					@Override
+					public Object transform(Object input) {
+						return ((AdminUserRole) input).getRoleId();
+					}
+				});
+	}
+
+	public boolean existBuildinPermission(String id) {
+		QPermission qPermission = new QPermission("qPermission");
+		return permissionRepo.count(qPermission.id.eq(id).and(qPermission.buildin.eq(true)).and(qPermission.deleted.ne(true))) > 0 ? true : false;
+	}
+
+	public void savePermission(Permission model) {
+		permissionRepo.save(model);
 	}
 }

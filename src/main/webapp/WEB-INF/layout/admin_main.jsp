@@ -7,26 +7,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 -->
         <html>
         <head>
-            <!-- Bootstrap 3.3.6 -->
-            <link rel="stylesheet" href="${static}/bootstrap-3.3.6/css/bootstrap.min.css">
-            <!-- Font Awesome -->
-            <!-- 
-            <link href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
-             -->
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
-            <!-- Ionicons -->
-<!-- 
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
- --> 
-            <link href="//cdn.bootcss.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
-            
-            <!-- Theme style -->
-            <link rel="stylesheet" href="${static}/AdminLTE-2.3.7/dist/css/AdminLTE.min.css">
-            <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
-        page. However, you can choose any other skin. Make sure you
-        apply the skin class to the body tag so the changes take effect.
-  -->
-            <link rel="stylesheet" href="${static}/AdminLTE-2.3.7/dist/css/skins/skin-blue.min.css">
+		    <%@ include file="/resources/common/required_style.jsp" %>
             <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
             <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
             <!--[if lt IE 9]>
@@ -92,7 +73,7 @@ desired effect
                                         <span class="label label-success">4</span>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li class="header">You have 4 messages</li>
+                                        <li class="header">您有四条信息</li>
                                         <li>
                                             <!-- inner menu: contains the messages -->
                                             <ul class="menu">
@@ -109,14 +90,14 @@ desired effect
                         <small><i class="fa fa-clock-o"></i> 5 mins</small>
                       </h4>
                                                         <!-- The message -->
-                                                        <p>Why not buy a new awesome theme?</p>
+                                                        <p>信息展示...</p>
                                                     </a>
                                                 </li>
                                                 <!-- end message -->
                                             </ul>
                                             <!-- /.menu -->
                                         </li>
-                                        <li class="footer"><a href="#">See All Messages</a></li>
+                                        <li class="footer"><a href="#">查看所有信息</a></li>
                                     </ul>
                                 </li>
                                 <!-- /.messages-menu -->
@@ -128,20 +109,20 @@ desired effect
                                         <span class="label label-warning">10</span>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li class="header">You have 10 notifications</li>
+                                        <li class="header">您有10个通知</li>
                                         <li>
                                             <!-- Inner Menu: contains the notifications -->
                                             <ul class="menu">
                                                 <li>
                                                     <!-- start notification -->
                                                     <a href="#">
-                                                        <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                                                        <i class="fa fa-users text-aqua"></i>今天有5位新成员加入
                                                     </a>
                                                 </li>
                                                 <!-- end notification -->
                                             </ul>
                                         </li>
-                                        <li class="footer"><a href="#">View all</a></li>
+                                        <li class="footer"><a href="#">查看所有</a></li>
                                     </ul>
                                 </li>
                                 <!-- Tasks Menu -->
@@ -152,7 +133,7 @@ desired effect
                                         <span class="label label-danger">9</span>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li class="header">You have 9 tasks</li>
+                                        <li class="header">您有9个任务</li>
                                         <li>
                                             <!-- Inner menu: contains the tasks -->
                                             <ul class="menu">
@@ -161,14 +142,14 @@ desired effect
                                                     <a href="#">
                                                         <!-- Task title and progress text -->
                                                         <h3>
-                        Design some buttons
+                        设计按钮
                         <small class="pull-right">20%</small>
                       </h3>
                                                         <!-- The progress bar -->
                                                         <div class="progress xs">
                                                             <!-- Change the css width attribute to simulate progress -->
                                                             <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                                                                <span class="sr-only">20% Complete</span>
+                                                                <span class="sr-only">20% 完成度</span>
                                                             </div>
                                                         </div>
                                                     </a>
@@ -177,7 +158,7 @@ desired effect
                                             </ul>
                                         </li>
                                         <li class="footer">
-                                            <a href="#">View all tasks</a>
+                                            <a href="#">查看所有任务</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -188,14 +169,14 @@ desired effect
                                         <!-- The user image in the navbar-->
                                         <img src="${static}/AdminLTE-2.3.7/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
                                         <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                                        <span class="hidden-xs">Alexander Pierce</span>
+                                        <span class="hidden-xs">王辉阳</span>
                                     </a>
                                     <ul class="dropdown-menu">
                                         <!-- The user image in the menu -->
                                         <li class="user-header">
                                             <img src="${static}/AdminLTE-2.3.7/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                                             <p>
-                                                Alexander Pierce - Web Developer
+                                                王辉阳 - Java开发
                                                 <small>Member since Nov. 2012</small>
                                             </p>
                                         </li>
@@ -203,13 +184,13 @@ desired effect
                                         <li class="user-body">
                                             <div class="row">
                                                 <div class="col-xs-4 text-center">
-                                                    <a href="#">Followers</a>
+                                                    <a href="#">关注者</a>
                                                 </div>
                                                 <div class="col-xs-4 text-center">
-                                                    <a href="#">Sales</a>
+                                                    <a href="#">业绩</a>
                                                 </div>
                                                 <div class="col-xs-4 text-center">
-                                                    <a href="#">Friends</a>
+                                                    <a href="#">朋友</a>
                                                 </div>
                                             </div>
                                             <!-- /.row -->
@@ -266,7 +247,7 @@ desired effect
                             <li class="header">菜单</li>
                             <!-- Optionally, you can add icons to the links -->
                             <li role="index"  class="active"><a href="${ctx }/admin/index"><i class="fa fa-link"></i> <span>主页</span></a></li>
-                            <li  role="test"><a href="${ctx }/admin/index"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+                            <li  role="updatePwdPage"><a href="${ctx }/adminUsers/updatePwdPage"><i class="fa fa-link"></i> <span>修改密码</span></a></li>
                             <li class="treeview"   >
 						           <a href="#">
 						            <i class="fa fa-wrench"></i>
@@ -298,7 +279,9 @@ desired effect
                     <section class="content-header">
                         <h1>
         <sitemesh:write property='title'/>
+        <!-- 单个页面副标题
         <small>Optional description</small>
+         -->
       </h1>
                         <ol class="breadcrumb">
                             <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>

@@ -10,7 +10,7 @@ import com.shineoxygen.work.base.model.UnDeletedEntity;
 public class Permission extends UnDeletedEntity {
 	private String name;
 	private String url; // 权限URL
-	private boolean buildIn; // 是否内置
+	private boolean buildin; // 是否内置
 	private int showOrder; // 显示顺序
 
 	public String getName() {
@@ -37,12 +37,12 @@ public class Permission extends UnDeletedEntity {
 		this.showOrder = showOrder;
 	}
 
-	public boolean isBuildIn() {
-		return buildIn;
+	public boolean isBuildin() {
+		return buildin;
 	}
 
-	public void setBuildIn(boolean buildIn) {
-		this.buildIn = buildIn;
+	public void setBuildin(boolean buildin) {
+		this.buildin = buildin;
 	}
 
 	public String toString() {

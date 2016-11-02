@@ -1,19 +1,18 @@
 package com.shineoxygen.work.admin.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 import org.mongodb.morphia.annotations.Entity;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.shineoxygen.work.base.model.UnDeletedEntity;
-import com.shineoxygen.work.base.utils.JsonUtils;
 
 @Document(collection = "Role")
 @Entity
 public class Role extends UnDeletedEntity {
 	private String name; // 名称
-	private boolean buildIn; // 是否超管组
+	private boolean buildin; // 是否超管组
+	private Date ctime;// create time
 
 	public Role() {
 	}
@@ -26,12 +25,20 @@ public class Role extends UnDeletedEntity {
 		this.name = name;
 	}
 
-	public boolean isBuildIn() {
-		return buildIn;
+	public boolean isBuildin() {
+		return buildin;
 	}
 
-	public void setBuildIn(boolean buildIn) {
-		this.buildIn = buildIn;
+	public void setBuildin(boolean buildin) {
+		this.buildin = buildin;
+	}
+
+	public Date getCtime() {
+		return ctime;
+	}
+
+	public void setCtime(Date ctime) {
+		this.ctime = ctime;
 	}
 
 }

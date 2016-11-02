@@ -1,32 +1,22 @@
 package com.shineoxygen.work.base.repo.impl;
 
-import static org.hamcrest.CoreMatchers.nullValue;
-
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.mongodb.repository.query.MongoEntityInformation;
 import org.springframework.data.mongodb.repository.support.QueryDslMongoRepository;
 
 import com.querydsl.core.types.Predicate;
-import com.shineoxygen.work.admin.model.AdminUser;
-import com.shineoxygen.work.base.model.bootstraptable.Order;
-import com.shineoxygen.work.base.model.bootstraptable.SentParameters;
 import com.shineoxygen.work.base.model.bootstraptable.TablePage;
-import com.shineoxygen.work.base.model.page.Page;
 import com.shineoxygen.work.base.repo.UndeletedMongoRepository;
 import com.shineoxygen.work.base.utils.ReflectionUtils;
 

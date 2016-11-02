@@ -21,7 +21,9 @@ public class QRole extends EntityPathBase<Role> {
 
     public final com.shineoxygen.work.base.model.QUnDeletedEntity _super = new com.shineoxygen.work.base.model.QUnDeletedEntity(this);
 
-    public final BooleanPath buildIn = createBoolean("buildIn");
+    public final BooleanPath buildin = createBoolean("buildin");
+
+    public final DateTimePath<java.util.Date> ctime = createDateTime("ctime", java.util.Date.class);
 
     //inherited
     public final BooleanPath deleted = _super.deleted;

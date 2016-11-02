@@ -17,7 +17,6 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.shineoxygen.work.admin.service.AdminUserRolePermissionMgr;
 import com.shineoxygen.work.admin.service.AdminUserService;

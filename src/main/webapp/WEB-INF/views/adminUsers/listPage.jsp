@@ -109,7 +109,8 @@
 	            {
 	                data: "userName",
 	            }, {
-	                data: "ctime"
+	                data: "ctime",
+	                render:BD_CONSTANT.DATA_TABLES.RENDER.YMDDate
 	            },{
 	            	data:null,
 	            	defaultContent:"",
@@ -159,6 +160,7 @@
         
     });
     </script>
+    
 </body>
 
 </html>

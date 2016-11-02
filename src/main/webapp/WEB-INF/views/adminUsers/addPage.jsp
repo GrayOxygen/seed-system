@@ -8,7 +8,7 @@
 	  <link rel="stylesheet" href="${static}/plugins/projectSpecific/bootstrapValidator/css/bootstrapValidator.min.css">
 <style>
 #currentBodyContent {
-	width:50%
+	width: 60%
 }
 </style>
 </head>
@@ -50,6 +50,16 @@
                     <input type="text" class="form-control" id="phoneNum"  name="phoneNum"   placeholder="手机号码">
                   </div>
                 </div>
+                 
+                 <input type="hidden"  id="rolesID"  name="rolesID" />
+                 <div class="form-group" >
+	                <label for="pwd" class="col-sm-2 control-label">角色列表</label>
+
+          			<div class="col-sm-10" >
+							 <iframe src="${ctx}/adminUsers/rolesListPage"   id="iFrame"   style="height: 43em;width: 100%;border:0" ></iframe>
+            		</div>
+           		</div>
+           		
               </div>
               <!-- /.box-body -->
               <div class="box-footer">
@@ -78,6 +88,17 @@
 			 });
 			 // 提交点击事件
 			$("#submitBtn").click(function(){
+				// 校验 iframe 选择项  
+				var iFrame = document.getElementById('iFrame');
+				// 兼容：获取窗口对象
+				var win = iFrame.window || iFrame.contentWindow;
+				var checked = win.getCheckedFromIFrame();
+				if( !(checked && checked.length>0) ){
+					openAlert("请选择角色!");
+					return ;
+				}
+				$("#rolesID").val(checked);
+				
 				// 校验通过
 				if($("#submitForm").data('bootstrapValidator').isValid()){
 				

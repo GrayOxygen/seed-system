@@ -7,8 +7,17 @@
 	</mapping>
 
 	<mapping path="/admin/login" exclue="true" />
-	<mapping path="/admin/logout" exclue="true" />
 	<mapping path="/admin/login.*" exclue="true" />
+	<mapping path="/admin/logout" exclue="true" />
 	<mapping path="/admin/logout.*" exclue="true" />
+	<mapping path="/admin/unauthorized" exclue="true" />
 	<mapping path="/admin/unauthorized.*" exclue="true" />
+
+	<!-- 权限公用页面 -->
+	<mapping path="/permissions/commonListPage" exclue="true" />
+	<mapping path="/permissions/commonListPage.*" exclue="true" />
+
+	<!-- 角色公用页面 -->
+	<mapping path="/roles/commonListPage" exclue="true" />
+	<mapping path="/roles/commonListPage.*" exclue="true" />
 </sitemesh>

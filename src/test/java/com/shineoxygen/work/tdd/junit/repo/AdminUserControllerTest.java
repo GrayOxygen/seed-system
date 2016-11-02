@@ -24,54 +24,54 @@ import com.shineoxygen.work.tdd.config.WebConfig;
 @ContextConfiguration(classes = { MongodbConfig.class, WebConfig.class })
 @SuppressWarnings("all")
 public class AdminUserControllerTest {
-	@Autowired
-	private AdminUserMgrController adminUserMgrController;
-	@Autowired
-	private AdminUserService adminUserSrv;
-	private MockHttpServletRequest req;
-	private MockHttpServletResponse res;
-	private AdminUser testUser;
-
-	@Before
-	public void setUp() throws Exception {
-		req = new MockHttpServletRequest();
-		res = new MockHttpServletResponse();
-
-		// 测试数据
-		testUser = adminUserSrv.findByUserNameAndPwd("AdminUserControllerTest", "123123");
-		if (null == testUser) {
-			testUser = new AdminUser();
-			testUser.setEmail("AdminUserControllerTest@qq.com");
-			testUser.setUserName("AdminUserControllerTest");
-			testUser.setPhoneNum("13222221111");
-			testUser.setPwd(DigestUtils.md5Hex("123123"));
-			adminUserSrv.save(testUser);
-			System.out.println(testUser.getId());
-		}
-	}
-
-	@Test
-	public void add() throws UnsupportedEncodingException {
-		AdminUser adminUser = new AdminUser();
-		adminUser.setEmail("90@qq.com");
-		adminUser.setUserName("AdminUserControllerTest");
-		adminUser.setPhoneNum("13222221111");
-		adminUser.setPwd(DigestUtils.md5Hex("123123"));
-		ResultObject result = adminUserMgrController.add(adminUser);
-		System.out.println(result.getMessage());
-		Assert.assertFalse(result.isSuccess());
-	}
-
-	@Test
-	public void edit() throws UnsupportedEncodingException {
-		AdminUser adminUser = adminUserSrv.findById(testUser.getId());
-		adminUser.setEmail("90@qq.com");
-		adminUser.setUserName("AdminUserControllerTest");
-		adminUser.setPhoneNum("13222221111");
-		adminUser.setPwd(DigestUtils.md5Hex("123123"));
-		ResultObject result = adminUserMgrController.edit(adminUser);
-		System.out.println(result.getMessage());
-		Assert.assertFalse(result.isSuccess());
-	}
+//	@Autowired
+//	private AdminUserMgrController adminUserMgrController;
+//	@Autowired
+//	private AdminUserService adminUserSrv;
+//	private MockHttpServletRequest req;
+//	private MockHttpServletResponse res;
+//	private AdminUser testUser;
+//
+//	@Before
+//	public void setUp() throws Exception {
+//		req = new MockHttpServletRequest();
+//		res = new MockHttpServletResponse();
+//
+//		// 测试数据
+//		testUser = adminUserSrv.findByUserNameAndPwd("AdminUserControllerTest", "123123");
+//		if (null == testUser) {
+//			testUser = new AdminUser();
+//			testUser.setEmail("AdminUserControllerTest@qq.com");
+//			testUser.setUserName("AdminUserControllerTest");
+//			testUser.setPhoneNum("13222221111");
+//			testUser.setPwd(DigestUtils.md5Hex("123123"));
+//			adminUserSrv.save(testUser);
+//			System.out.println(testUser.getId());
+//		}
+//	}
+//
+//	@Test
+//	public void add() throws UnsupportedEncodingException {
+//		AdminUser adminUser = new AdminUser();
+//		adminUser.setEmail("90@qq.com");
+//		adminUser.setUserName("AdminUserControllerTest");
+//		adminUser.setPhoneNum("13222221111");
+//		adminUser.setPwd(DigestUtils.md5Hex("123123"));
+//		ResultObject result = adminUserMgrController.add(adminUser);
+//		System.out.println(result.getMessage());
+//		Assert.assertFalse(result.isSuccess());
+//	}
+//
+//	@Test
+//	public void edit() throws UnsupportedEncodingException {
+//		AdminUser adminUser = adminUserSrv.findById(testUser.getId());
+//		adminUser.setEmail("90@qq.com");
+//		adminUser.setUserName("AdminUserControllerTest");
+//		adminUser.setPhoneNum("13222221111");
+//		adminUser.setPwd(DigestUtils.md5Hex("123123"));
+//		ResultObject result = adminUserMgrController.edit(adminUser);
+//		System.out.println(result.getMessage());
+//		Assert.assertFalse(result.isSuccess());
+//	}
 
 }

@@ -21,7 +21,7 @@ public class QPermission extends EntityPathBase<Permission> {
 
     public final com.shineoxygen.work.base.model.QUnDeletedEntity _super = new com.shineoxygen.work.base.model.QUnDeletedEntity(this);
 
-    public final BooleanPath buildIn = createBoolean("buildIn");
+    public final BooleanPath buildin = createBoolean("buildin");
 
     //inherited
     public final BooleanPath deleted = _super.deleted;
