@@ -43,6 +43,7 @@
                                 		<input type="hidden"     name="id">  
 	                            </th>
                                 <th>权限名</th>
+                                <th>url</th>
                                 <th>创建时间</th>
                                 <th>操作</th>
                             </tr>
@@ -111,7 +112,11 @@
             	},
 	            {
 	                data: "name",
-	            },{
+	            },
+	            {
+	                data: "url",
+	            },
+	            {
                     width: "30px",
                     data: "ctime",
                     render:BD_CONSTANT.DATA_TABLES.RENDER.YMDDate

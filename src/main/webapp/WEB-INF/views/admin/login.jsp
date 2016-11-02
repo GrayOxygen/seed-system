@@ -30,11 +30,13 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <a href="${ctx}/admin/index"><b>Admin</b>LTE</a>
+    <a href="${ctx}/admin/index"><b>${system_name}</b></a>
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body">
-    <p class="login-box-msg">Sign in to start your session</p>
+  <!-- 
+    <p class="login-box-msg">登陆</p>
+   -->
 
     <form action="${ctx}/admin/login" method="post"  id="loginForm">
    	    <input type="hidden" id="msg" value="${message}">
@@ -72,8 +74,8 @@
     </div>
     <!-- /.social-auth-links -->
 
-    <a href="#">I forgot my password</a><br>
-    <a href="register.jsp" class="text-center">Register a new membership</a>
+    <a href="#">忘记密码</a><br>
+    <a href="register.jsp" class="text-center">注册</a>
 
   </div>
   <!-- /.login-box-body -->
