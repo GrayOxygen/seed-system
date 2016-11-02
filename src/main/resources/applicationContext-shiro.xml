@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
     		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
 
@@ -9,15 +9,31 @@
 		<property name="loginUrl" value="/admin/login" />
 		<property name="unauthorizedUrl" value="/admin/unauthorized" />
 		<property name="filterChainDefinitions">
-			<!-- 如下url配置从上而下匹配，匹配到多个过滤器时，执行第一个，不往下执行匹配到的其他过滤器-->
+			<!-- 如下url配置从上而下匹配，匹配到多个过滤器时，执行第一个，不往下执行匹配到的其他过滤器 -->
 			<value>
 				/admin/login.*=anon
 				/admin/unauthorized.*=anon
 				/admin/logout.*=anon
+				/admin/index=perms[admin:index]
 				/admin/index.*=perms[admin:index]
+
 				/adminUsers/listPage=perms[admin:adminUsers:read]
 				/adminUsers/list=perms[admin:adminUsers:read]
+				/adminUsers/listPage.*=perms[admin:adminUsers:read]
+				/adminUsers/list.*=perms[admin:adminUsers:read]
+
+				/adminUsers/updatePwdPage=perms[admin:adminUsers:updatePwd]
+				/adminUsers/updatePwd=perms[admin:adminUsers:updatePwd]
+				/adminUsers/updatePwdPage.*=perms[admin:adminUsers:updatePwd]
+				/adminUsers/updatePwd.*=perms[admin:adminUsers:updatePwd]
+
 				/adminUsers/**=perms[admin:adminUsers:*]
+
+				/roles/*=perms[admin:roles:*]
+
+				/permissions/delete =perms[admin:permissions:delete]
+				/permissions/* = perms[admin:permissions:*]
+
 			</value>
 		</property>
 	</bean>
