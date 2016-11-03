@@ -1,5 +1,6 @@
 package com.shineoxygen.work.temp.junit;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import com.shineoxygen.work.temp.config.TempBeanConfig;
 import com.shineoxygen.work.temp.dao.PersonDao;
 import com.shineoxygen.work.temp.pojo.Person;
 
-import junit.framework.Assert;
+
 
 /**
  * 演示针对mongodb特性的MongoOperations(MongoTemplate的超类)接口使用，完成数据库操作

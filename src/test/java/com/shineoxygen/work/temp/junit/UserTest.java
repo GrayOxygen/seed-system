@@ -1,9 +1,5 @@
 package com.shineoxygen.work.temp.junit;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -12,7 +8,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.shineoxygen.work.temp.config.DSConfig;
 import com.shineoxygen.work.temp.config.TempBeanConfig;
 import com.shineoxygen.work.temp.dao.UserDao;
-import com.shineoxygen.work.temp.pojo.User;
 
 /**
  * 为一个repository提供自定义方法：
@@ -33,36 +28,36 @@ public class UserTest {
 	@Autowired
 	private UserDao userDao;
 
-	@Test
-	public void test() {
-		userDao.deleteAll();
-		User user1 = new User();
-		User user2 = new User();
-		user1.setId("1");
-		user1.setJob("java developer111");
-		user1.setName("wanghuiyang");
-		user2.setId(UUID.randomUUID().toString());
-		user2.setJob("library boss");
-		user2.setName("wanghuiyang");
-		userDao.save(user1);
-		userDao.save(user2);
-
-		List<User> users = userDao.findByName("wanghuiyang");
-		for (User user : users) {
-			System.out.println(user);
-		}
-		User user3 = new User();
-		user3.setName("yangling");
-		user3.setJob("hello");
-		userDao.someCustomMethod(user3);
-
-		List<User> list = userDao.findAll();
-
-		for (User user : list) {
-			System.out.println(user.toString());
-		}
-
-		// userDao.del("1", User.class);
-	}
+//	@Test
+//	public void test() {
+//		userDao.deleteAll();
+//		User user1 = new User();
+//		User user2 = new User();
+//		user1.setId("1");
+//		user1.setJob("java developer111");
+//		user1.setName("wanghuiyang");
+//		user2.setId(UUID.randomUUID().toString());
+//		user2.setJob("library boss");
+//		user2.setName("wanghuiyang");
+//		userDao.save(user1);
+//		userDao.save(user2);
+//
+//		List<User> users = userDao.findByName("wanghuiyang");
+//		for (User user : users) {
+//			System.out.println(user);
+//		}
+//		User user3 = new User();
+//		user3.setName("yangling");
+//		user3.setJob("hello");
+//		userDao.someCustomMethod(user3);
+//
+//		List<User> list = userDao.findAll();
+//
+//		for (User user : list) {
+//			System.out.println(user.toString());
+//		}
+//
+//		// userDao.del("1", User.class);
+//	}
 
 }

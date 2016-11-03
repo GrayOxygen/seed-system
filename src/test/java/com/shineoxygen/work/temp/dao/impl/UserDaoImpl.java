@@ -17,4 +17,5 @@ public class UserDaoImpl implements UserDaoCustom {
 		System.out.println("some custom method");
 	}
 
+
 }

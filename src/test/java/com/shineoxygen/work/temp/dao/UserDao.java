@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.shineoxygen.work.temp.pojo.User;
 
+
 /**
  * 拥有自定义方法的repository
  * 

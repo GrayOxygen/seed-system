@@ -1,22 +1,9 @@
 package com.shineoxygen.work.tdd.junit.repo;
 
-import java.io.UnsupportedEncodingException;
-
-import org.apache.commons.codec.digest.DigestUtils;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.shineoxygen.work.admin.controller.AdminUserMgrController;
-import com.shineoxygen.work.admin.model.AdminUser;
-import com.shineoxygen.work.admin.service.AdminUserService;
-import com.shineoxygen.work.base.model.ResultObject;
 import com.shineoxygen.work.tdd.config.MongodbConfig;
 import com.shineoxygen.work.tdd.config.WebConfig;
 

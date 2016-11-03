@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
@@ -25,6 +26,7 @@ import com.shineoxygen.work.base.repo.impl.UndeletedMongoRepositoryImpl;
  * @date 2016年10月21日 下午4:55:58
  */
 @Configuration
+@ComponentScan("com.shineoxygen.work.tdd")
 @PropertySources(value = { @PropertySource(value = "classpath:mongodb.properties") })
 // 开启Mongo Repository自定义功能，才能给repository或自己的dao自定义方法
 // repositoryImplementationPostfix默认为Impl，表示提供自定义方法的repository实现的名字后缀，spring由此找到接口与实现对应关系
