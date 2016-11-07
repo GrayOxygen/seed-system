@@ -10,4 +10,4 @@ mvn eclipse:eclipse即可
 org.apache.jasper.compiler.Parser.STRICT_QUOTE_ESCAPING=false
 org.apache.el.parser.SKIP_IDENTIFIER_CHECK=true
 
-本项目不再维护，迁移至码市了。
+本项目可能不再维护，迁移至码市了。
